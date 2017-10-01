@@ -1,4 +1,4 @@
-# magnificat
+# Magnificat
 
 Magnificat will become a magnificent cataloguing app for classical music enthusiasts with large CD collections to organise.
 
@@ -6,26 +6,26 @@ Magnificat will become a magnificent cataloguing app for classical music enthusi
 
 This project is only a hobby so the following delivery dates should be taken with a grain of salt!
 
-# Version 0.1 (end of October 2017)
+### Version 0.1 (end of October 2017)
 - Use Electron and Ext JS to create an interface allowing users to open multiple tabs.
 - Allow users to browse/play music on the filesystem.
 - Remember play count and last date for each track by saving information to a file in the current directory (optional).
  
-# Version 0.2 (end of January 2018)
+### Version 0.2 (end of January 2018)
 - Allow users to browse/play music by genre, composer, album, etc (like the column browser in iTunes; requires a database which will be updated periodically).
 - Editing of tag information (including obtaining of details from file names based on user-entered format).
 
-# Version 0.3 (end of April 2018)
+### Version 0.3 (end of April 2018)
 - Ripping CDs to MP3, OGG, and FLAC.
 - Use CDDB et al for default tags.
 
-# Version 0.4 (end of May 2018)
+### Version 0.4 (end of May 2018)
 - Mini player support (with single-click buttons to switch between both views).
 
-# Version 0.5 (end of July 2018)
+### Version 0.5 (end of July 2018)
 - Rip CDs to FLAC and transfer existing file names and tag information from user-selected lossless equivalents on disc.
 
-# Version 0.6 (end of October 2018)
+### Version 0.6 (end of October 2018)
 - Allow users to rename files based on tag information.
 
 ## Pre-requisites
