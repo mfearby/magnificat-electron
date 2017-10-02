@@ -28,16 +28,18 @@ Ext.define('mcat.view.simple.Simple', {
             region: 'west',
             split: true,
             reference: 'folderTree',
-            width: 230,
             displayField: 'name',
             border: false,
+            width: 230, // need default until binding takes effect or else 'Layout run failed' error occurs!
             viewConfig: {
                 listeners: {
                     itemcontextmenu: 'onTreeItemContextMenu',
                     selectionchange: 'onTreeSelectionChange',
+                    resize: 'onTreePanelResize'
                 }
             },
             bind: {
+                width: '{treeWidth}',
                 store: '{Folders}'
             }
         },

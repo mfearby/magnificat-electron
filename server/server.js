@@ -37,9 +37,9 @@ module.exports = () => {
     // mrf://files/?path=%2FUsers%2Fmarc%2FMusic%2FCDs&_dc=1506770614501&page=1&start=0&limit=25
     web.get('files/?path=:path&_dc=:_dc&page=:page&start=:start&limit=:limit', (req, res) => {
       
-        const start = req.params.start < people.length ? req.params.start : 0;
-        const end = req.params.limit * req.params.page;
-        const limit = end;
+        // const start = req.params.start < people.length ? req.params.start : 0;
+        // const end = req.params.limit * req.params.page;
+        // const limit = end;
 
         // TODO: paginate!
         let files = readFolder(decodeURIComponent(req.params.path));

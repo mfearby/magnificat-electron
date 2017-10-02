@@ -9,9 +9,7 @@ Ext.define('mcat.Application', {
         'mcat.cfg.Global'
     ],
 
-    stores: [
-        'Personnel'
-    ],
+    stores: [ ],
 
     launch: function () {
         

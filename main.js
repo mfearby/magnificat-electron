@@ -23,7 +23,8 @@ const settings = new Settings({
 // Define global constants which will be copied into the mcat.cfg.Global singleton
 global.Constants = {
     musicDir: settings.get('lastDir') || app.getPath('music'),
-    pathSep: path.sep
+    pathSep: path.sep,
+    treeWidth: settings.get('treeWidth') || 230
 };
 
 // Set up the fake web server

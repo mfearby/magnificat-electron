@@ -45,6 +45,10 @@ Ext.define('mcat.view.simple.SimpleViewController', {
         this.saveSetting('selectedDir', fullPath);
     },
 
+    onTreePanelResize: function(panel, width, height, oldWidth, oldHeight, eOpts) {
+        this.saveSetting('treeWidth', width);
+    },
+
     onPanelAfterRender: function(container, layout, eOpts) {
         const selectedDir = this.getSetting('selectedDir');
         if (selectedDir) {
