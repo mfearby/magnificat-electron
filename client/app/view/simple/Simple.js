@@ -51,8 +51,8 @@ Ext.define('mcat.view.simple.Simple', {
             },
             columns: [
                 { text: 'Name', dataIndex: 'name', flex: 1 },
-                { text: 'Size', dataIndex: 'size', width: 120 },
-                { text: 'Modified', dataIndex: 'modified', width: 200 }
+                { text: 'Size', xtype: 'templatecolumn', tpl: '{[ Ext.util.Format.fileSize(values.size) ]}' },
+                { text: 'Modified', dataIndex: 'modified', xtype: 'datecolumn', format: 'd M Y, g:i a', width: 180 }
             ]
         }
     ]
