@@ -57,13 +57,15 @@ module.exports = () => {
         let files = fs.readdirSync(path);
 
         for (let file of files) {
-            let stats = fs.statSync(path + global.Constants.pathSep + file);
+            let fullPath = path + global.Constants.pathSep + file;
+            let stats = fs.statSync(fullPath);
             if (!stats.isDirectory() && isMusicFile(file)) {
                 data.push({
                     name: file,
                     size: stats.size,
                     modified: stats.mtime,
-                    created: stats.birthtime
+                    created: stats.birthtime,
+                    fullPath
                 });
             }
         }

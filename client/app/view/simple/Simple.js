@@ -53,7 +53,12 @@ Ext.define('mcat.view.simple.Simple', {
                 { text: 'Name', dataIndex: 'name', flex: 1 },
                 { text: 'Size', xtype: 'templatecolumn', tpl: '{[ Ext.util.Format.fileSize(values.size) ]}' },
                 { text: 'Modified', dataIndex: 'modified', xtype: 'datecolumn', format: 'd M Y, g:i a', width: 180 }
-            ]
+            ],
+            viewConfig: {
+                listeners: {
+                    itemdblclick: 'onGridItemDblClick'
+                }
+            }
         }
     ]
 

@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
+const fs = require('fs');
 const extDir = (process.argv[process.argv.length - 1] === 'plain') ? 'client' : 'client_built';
 const Settings = require('./settings.js');
 let mainWindow;
@@ -64,10 +65,12 @@ app.on('activate', function () {
     }
 });
 
-// Handle plain IPC call from the browser window
-// ipcMain.on('asdf', (event, data) => {
-//     console.log('data: ' + data);
-// });
+// Receive a request from the browser to read the contents of a file
+ipcMain.on('file:read', (event, path) => {
+    console.log('file:read: ' + path);
+    var blob = fs.readFileSync(path);
+    mainWindow.webContents.send('file:contents', blob);
+});
 
 exports.Settings = settings;
 

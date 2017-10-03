@@ -2,6 +2,21 @@ Ext.define('mcat.view.simple.SimpleViewController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.simple',
 
+    onGridItemDblClick: function(grid, record, item, index, e, eOpts) {
+        const path = record.get('fullPath');
+        const { ipcRenderer } = require('electron'); 
+        // Send a message to the main process to read a file
+        ipcRenderer.send('file:read', path);
+        // Receive the contents of the file from the main process
+        ipcRenderer.on('file:contents', (event, arg) => {  
+            const player = document.getElementById('musicplayer');
+            player.src = '';
+            player.currentTime = 0;
+            const file = new File([arg], record.get('name'), {type: 'audio/mpeg', lastModified: Date.now()});
+            player.src = URL.createObjectURL(file);
+        });
+    },
+
     onTreeItemContextMenu: function(view, rec, node, index, e) {
         e.stopEvent();
         // Show the context menu only for the root tree node
@@ -11,7 +26,7 @@ Ext.define('mcat.view.simple.SimpleViewController', {
             //     view.getSelectionModel().select(rec);
             // }
 
-            var vc = this;
+            const vc = this;
             const contextMenu = Ext.create('Ext.menu.Menu', {
                 items: [{
                     text: 'Select Folder...',
@@ -32,9 +47,6 @@ Ext.define('mcat.view.simple.SimpleViewController', {
 
     onTreeSelectionChange: function(model, selected, eOpts) {
         if (selected.length == 0) return;
-
-        //console.log(selected[0]);
-
         const fullPath = selected[0].get('fullPath');
         const vm = this.getViewModel();
         vm.set('selectedDir', fullPath);

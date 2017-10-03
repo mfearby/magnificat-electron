@@ -12,16 +12,20 @@ Ext.define('mcat.view.viewport.Viewport', {
     controller: 'viewport',
     layout: 'border',
 
-    listeners: {
-        afterrender: 'onAfterRender'
-    },
-
     items: [
         {
             xtype: 'panel',
             region: 'north',
             height: 75,
-            html: 'header'
+            items: [
+                {
+                    xtype: 'component',
+                    id: 'musicplayer',
+                    autoEl: {
+                        tag: 'audio controls autoplay'
+                    }
+                }
+            ]
         },
         {
             xtype: 'tabpanel',
