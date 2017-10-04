@@ -31,6 +31,7 @@ Ext.define('mcat.view.simple.Simple', {
             displayField: 'name',
             border: false,
             width: 230, // need default until binding takes effect or else 'Layout run failed' error occurs!
+            bodyStyle: { border: 0 },
             viewConfig: {
                 listeners: {
                     itemcontextmenu: 'onTreeItemContextMenu',

@@ -5,5 +5,4 @@ client/ext
 client/npm-debug.log
 dist/
 .DS_Store
-
-
+npm-debug.log

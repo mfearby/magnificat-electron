@@ -12,11 +12,15 @@ Ext.define('mcat.view.viewport.Viewport', {
     controller: 'viewport',
     layout: 'border',
 
+    listeners: {
+        afterrender: 'onPanelAfterRender'
+    },
+
     items: [
         {
             xtype: 'panel',
             region: 'north',
-            height: 75,
+            height: 37,
             items: [
                 {
                     xtype: 'component',
@@ -30,6 +34,7 @@ Ext.define('mcat.view.viewport.Viewport', {
         {
             xtype: 'tabpanel',
             region: 'center',
+            reference: 'tabs',
             items: [
                 {
                     xtype: 'simple'

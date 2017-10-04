@@ -7,5 +7,9 @@
 Ext.define('mcat.view.viewport.ViewportController', {
     extend: 'Ext.app.ViewController',
 
-    alias: 'controller.viewport'
+    alias: 'controller.viewport',
+
+    onPanelAfterRender: function(container, layout, eOpts) {
+        this.lookup('tabs').tabBar.hide();
+    }
 });
