@@ -26,7 +26,9 @@ Ext.define('mcat.view.simple.Simple', {
         {
             xtype: 'treepanel',
             region: 'west',
-            split: true,
+            split: {
+                size: 3
+            },
             reference: 'folderTree',
             displayField: 'name',
             border: false,

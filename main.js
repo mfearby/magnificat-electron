@@ -5,28 +5,21 @@ const extDir = (process.argv[process.argv.length - 1] === 'plain') ? 'client' : 
 const Settings = require('./settings.js');
 let mainWindow;
 
-// console.log(process.argv);
-// console.log('process.env.VSCODE_PID: ' + process.env.VSCODE_PID);
-
 // Print some debugging information if running from within Visual Studio Code
 // if (process.env.VSCODE_PID) {
 //     console.log('extDir: ' + extDir);
 // }
 
 const settings = new Settings({
-    // The name of the data file
-    configName: 'user-preferences',
+    configName: 'user-preferences', // json filename
     defaults: {
-        windowBounds: { width: 1280, height: 720 }
+        windowBounds: { width: 1280, height: 720 },
+        musicDir: app.getPath('music'),
+        treeWidth: 230,
+        volumeLevel: 100,
+        pathSep: path.sep
     }
 });
-
-// Define global constants which will be copied into the mcat.cfg.Global singleton
-global.Constants = {
-    musicDir: settings.get('lastDir') || app.getPath('music'),
-    pathSep: path.sep,
-    treeWidth: settings.get('treeWidth') || 230
-};
 
 // Set up the fake web server
 const server = require('./server/server')();

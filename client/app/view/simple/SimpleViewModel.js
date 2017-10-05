@@ -8,10 +8,10 @@ Ext.define('mcat.view.simple.SimpleViewModel', {
     ],
 
     data: {
-        rootDir: mcat.cfg.Global.musicDir,
-        pathSep: mcat.cfg.Global.pathSep,
-        selectedDir: mcat.cfg.Global.musicDir,
-        treeWidth: mcat.cfg.Global.treeWidth
+        rootDir: mcat.global.Config.musicDir,
+        pathSep: mcat.global.Config.pathSep,
+        selectedDir: mcat.global.Config.musicDir,
+        treeWidth: mcat.global.Config.treeWidth
     },
 
     formulas: {

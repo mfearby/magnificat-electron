@@ -6,7 +6,9 @@ Ext.define('mcat.Application', {
     name: 'mcat',
 
     requires: [
-        'mcat.cfg.Global'
+        'mcat.global.Config',
+        'mcat.global.Util',
+        'mcat.global.Concertmaster'
     ],
 
     stores: [ ],

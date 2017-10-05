@@ -2,6 +2,7 @@ module.exports = () => {
 
     const { Router } = require('electron-routes');
     const fs = require('fs');
+    const path = require('path');
 
     // define custom mrf:// protocol
     const web = new Router('mrf'); 
@@ -14,7 +15,7 @@ module.exports = () => {
         var dirObjs = dirs.map(function(dir) {
             return {
                 name: dir,
-                fullPath: root + global.Constants.pathSep + dir,
+                fullPath: root + path.sep + dir,
                 expandable: true
             };
         });
@@ -27,9 +28,9 @@ module.exports = () => {
         });
     });
 
-    function getDirectories(path) {
-        return fs.readdirSync(path).filter(function (file) {
-            return fs.statSync(path + global.Constants.pathSep + file).isDirectory();
+    function getDirectories(dir) {
+        return fs.readdirSync(dir).filter(function (file) {
+            return fs.statSync(dir + path.sep + file).isDirectory();
         });
     }
 
@@ -52,12 +53,12 @@ module.exports = () => {
         });
     });
 
-    function readFolder(path) {
+    function readFolder(dir) {
         var data = [];
-        let files = fs.readdirSync(path);
+        let files = fs.readdirSync(dir);
 
         for (let file of files) {
-            let fullPath = path + global.Constants.pathSep + file;
+            let fullPath = dir + path.sep + file;
             let stats = fs.statSync(fullPath);
             if (!stats.isDirectory() && isMusicFile(file)) {
                 data.push({

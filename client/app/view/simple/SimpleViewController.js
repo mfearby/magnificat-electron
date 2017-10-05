@@ -2,18 +2,26 @@ Ext.define('mcat.view.simple.SimpleViewController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.simple',
 
+    onPanelAfterRender: function(container, layout, eOpts) {
+        const dir = mcat.global.Config.selectedDir;
+        if (dir) {
+            this.expandTreePath(dir);
+        }
+    },
+
     onGridItemDblClick: function(grid, record, item, index, e, eOpts) {
-        const path = record.get('fullPath');
-        const { ipcRenderer } = require('electron'); 
+        const vc = this,
+              vm = vc.getViewModel(),
+              view = vc.getView(),
+              path = record.get('fullPath'),
+              { ipcRenderer } = require('electron'); 
+
         // Send a message to the main process to read a file
         ipcRenderer.send('file:read', path);
+        
         // Receive the contents of the file from the main process
-        ipcRenderer.on('file:contents', (event, arg) => {  
-            const player = document.getElementById('musicplayer');
-            player.src = '';
-            player.currentTime = 0;
-            const file = new File([arg], record.get('name'), {type: 'audio/mpeg', lastModified: Date.now()});
-            player.src = URL.createObjectURL(file);
+        ipcRenderer.on('file:contents', (event, blob) => {  
+            mcat.global.Concertmaster.play(blob, record);
         });
     },
 
@@ -35,7 +43,7 @@ Ext.define('mcat.view.simple.SimpleViewController', {
                         const mainProcess = require('electron').remote.require('./main');
                         mainProcess.selectDirectory(function(newFolder) {
                             vc.reloadTree(newFolder);
-                            mainProcess.Settings.set('lastDir', newFolder);
+                            mcat.global.Config.save('lastDir', newFolder);
                         });
                     }
                 }]
@@ -53,19 +61,12 @@ Ext.define('mcat.view.simple.SimpleViewController', {
         // Force all bindings to update or else the store will be using the previously selected path
         vm.notify();
         vm.getStore('Files').load();
-        // Remember the user's last selected folder 
-        this.saveSetting('selectedDir', fullPath);
+        // Remember the user's last selected folder in the tree
+        mcat.global.Config.save('selectedDir', fullPath);
     },
 
     onTreePanelResize: function(panel, width, height, oldWidth, oldHeight, eOpts) {
-        this.saveSetting('treeWidth', width);
-    },
-
-    onPanelAfterRender: function(container, layout, eOpts) {
-        const selectedDir = this.getSetting('selectedDir');
-        if (selectedDir) {
-            this.expandTreePath(selectedDir);
-        }
+        mcat.global.Config.save('treeWidth', width);
     },
     
     reloadTree(newPath) {
@@ -73,29 +74,20 @@ Ext.define('mcat.view.simple.SimpleViewController', {
         vm.set('rootDir', newPath);
         vm.getStore('Folders').reload();
     },
-    
-    saveSetting(key, value) {
-        const mainProcess = require('electron').remote.require('./main');
-        mainProcess.Settings.set(key, value);
-    },
-
-    getSetting(key) {
-        const mainProcess = require('electron').remote.require('./main');
-        return mainProcess.Settings.get(key);
-    },
 
     expandTreePath: function(path) {
         const vc = this;
         const vm = vc.getViewModel();
         const tree = vc.lookup('folderTree');
         const rootDir = vm.get('rootDir');
-        const pathToExpand = vc.getFullTreeExpandPath(path, rootDir, mcat.cfg.Global.pathSep, ':');
-        // console.log('pathToExpand: ' + pathToExpand);
+        // something almost guaranteed not to conflict with any file or folder names out there
+        const treePathSep = '<(~)>'; 
+        const pathToExpand = vc.getFullTreeExpandPath(path, rootDir, mcat.global.Config.pathSep, treePathSep);
         
         setTimeout(function() {
-            tree.expandPath(pathToExpand, 'fullPath', ':', function(success, lastNode) {
+            tree.expandPath(pathToExpand, 'fullPath', treePathSep, function(success, lastNode) {
                 // Select the last tree node when the tree has finished expanding
-                tree.selectPath(pathToExpand, 'fullPath', ':');
+                tree.selectPath(pathToExpand, 'fullPath', treePathSep);
             });
         }, 500);
 
@@ -130,8 +122,6 @@ Ext.define('mcat.view.simple.SimpleViewController', {
                         }
                     }
                 }
-                // A colon is an illegal filename/folder character on Mac OS & Windows.
-                // The only illegal chars on Linux are / and null, so let's hope nobody's using colons out there!
                 pathToExpand += treePathSeparator + temp;
             }
         }

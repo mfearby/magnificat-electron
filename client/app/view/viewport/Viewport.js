@@ -5,6 +5,7 @@ Ext.define('mcat.view.viewport.Viewport', {
     requires: [
         'mcat.view.viewport.ViewportController',
         'mcat.view.viewport.ViewportModel',
+        'mcat.view.player.Player',
         'mcat.view.simple.Simple'
     ],
 
@@ -18,18 +19,10 @@ Ext.define('mcat.view.viewport.Viewport', {
 
     items: [
         {
-            xtype: 'panel',
+            xtype: 'player',
             region: 'north',
-            height: 37,
-            items: [
-                {
-                    xtype: 'component',
-                    id: 'musicplayer',
-                    autoEl: {
-                        tag: 'audio controls autoplay'
-                    }
-                }
-            ]
+            id: 'MainPlayer', // ConcertMaster.js depends on this ID!
+            height: 50
         },
         {
             xtype: 'tabpanel',

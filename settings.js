@@ -10,12 +10,19 @@ class Settings {
         // app.getPath('userData') will return a string of the user's app data directory path.
         // Mac OS: ~/Library/Application Support/magnificat/whatever.json
         // Linux: ~/.config/magnificat/whatever.json
-        // Windows: C:\Users\<username>\AppData\Local\magnificat\whatever.json
+        // Windows: C:\Users\<username>\AppData\[Roaming|Local]\magnificat\whatever.json
         const userDataPath = (electron.app || electron.remote.app).getPath('userData');
         // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
         this.path = path.join(userDataPath, opts.configName + '.json');
         
-        this.data = parseDataFile(this.path, opts.defaults);
+        // Original line:
+        // this.data = parseDataFile(this.path, opts.defaults);
+
+        // Modified by Marc so that saved settings are merged with defaults rather
+        // than the defaults only becoming available if there's a failure in parsing
+        const temp = parseDataFile(this.path, opts.defaults);
+        this.data = opts.defaults;
+        Object.assign(this.data, temp);
     }
 
     // This will just return the property on the `data` object
@@ -44,7 +51,7 @@ function parseDataFile(filePath, defaults) {
         // if there was some kind of error, return the passed in defaults instead.
         return defaults;
     }
-  }
+}
   
-  // expose the class
-  module.exports = Settings;
+// expose the class
+module.exports = Settings;
