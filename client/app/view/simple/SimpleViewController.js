@@ -10,19 +10,7 @@ Ext.define('mcat.view.simple.SimpleViewController', {
     },
 
     onGridItemDblClick: function(grid, record, item, index, e, eOpts) {
-        const vc = this,
-              vm = vc.getViewModel(),
-              view = vc.getView(),
-              path = record.get('fullPath'),
-              { ipcRenderer } = require('electron'); 
-
-        // Send a message to the main process to read a file
-        ipcRenderer.send('file:read', path);
-        
-        // Receive the contents of the file from the main process
-        ipcRenderer.on('file:contents', (event, blob) => {  
-            mcat.global.Concertmaster.play(blob, record);
-        });
+        mcat.global.Concertmaster.play(record);
     },
 
     onTreeItemContextMenu: function(view, rec, node, index, e) {
@@ -66,6 +54,7 @@ Ext.define('mcat.view.simple.SimpleViewController', {
     },
 
     onTreePanelResize: function(panel, width, height, oldWidth, oldHeight, eOpts) {
+        if (oldWidth === undefined) return;
         mcat.global.Config.save('treeWidth', width);
     },
     

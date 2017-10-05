@@ -12,6 +12,7 @@ Ext.define('mcat.view.viewport.Viewport', {
     viewModel: 'viewport',
     controller: 'viewport',
     layout: 'border',
+    id: 'MainViewport', // ConcertMaster.js depends on this ID!
 
     listeners: {
         afterrender: 'onPanelAfterRender'

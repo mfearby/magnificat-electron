@@ -2,7 +2,7 @@ Ext.define('mcat.view.player.PlayerViewController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.player',
 
-    onPanelAfterRender: function(component, eOpts) {
+    onPanelAfterRender(component, eOpts) {
         var vc = this,
             vm = vc.getViewModel(),
             view = vc.getView();
@@ -43,7 +43,7 @@ Ext.define('mcat.view.player.PlayerViewController', {
         return this.getViewModel().get('songPosition') || '';
     },
 
-    onPlayButtonClick: function(button, e, eOpts) {
+    onPlayButtonClick(button, e, eOpts) {
         var player = document.getElementById('musicplayer');
 
         if (player.src) {
@@ -53,10 +53,18 @@ Ext.define('mcat.view.player.PlayerViewController', {
             else {
                 player.pause();
             }
+        } else {
+            if (this.playNextTrack() === false)
+                mcat.global.Util.messageBox('Please select a file to play first', 'w');
         }
     },
 
-    onStopButtonClick: function(button, e, eOpts) {
+    playNextTrack() {
+        // Ask the ViewportModel to see if a folder is selected in the active tab and get the first record
+        return this.getViewModel().getParent().lookForThenPlayNextTrack();
+    },
+
+    onStopButtonClick(button, e, eOpts) {
         var player = document.getElementById('musicplayer');
 
         if (player.src) {
@@ -65,7 +73,7 @@ Ext.define('mcat.view.player.PlayerViewController', {
         }
     },
 
-    onSliderChange: function(slider, newValue, thumb, eOpts) {
+    onSliderChange(slider, newValue, thumb, eOpts) {
         var player = document.getElementById('musicplayer');
 
         if (player.src) {
@@ -73,12 +81,12 @@ Ext.define('mcat.view.player.PlayerViewController', {
         }
     },
 
-    onMuteButtonClick: function(button, e, eOpts) {
+    onMuteButtonClick(button, e, eOpts) {
         var player = document.getElementById('musicplayer');
         player.muted = !player.muted;
     },
 
-    onVolumeSliderChange: function(slider, newValue, thumb, eOpts) {
+    onVolumeSliderChange(slider, newValue, thumb, eOpts) {
         var player = document.getElementById('musicplayer');
         player.volume = newValue / 100;
         this.debouncedSaveVolume(slider.getValue());

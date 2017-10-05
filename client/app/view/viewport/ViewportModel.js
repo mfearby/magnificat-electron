@@ -4,7 +4,10 @@
 Ext.define('mcat.view.viewport.ViewportModel', {
     extend: 'Ext.app.ViewModel',
 
-    alias: 'viewmodel.viewport'
+    alias: 'viewmodel.viewport',
 
-    
+    lookForThenPlayNextTrack() {
+        console.log('selectedDir: ' + mcat.global.Config.selectedDir);
+        return false;
+    }
 });

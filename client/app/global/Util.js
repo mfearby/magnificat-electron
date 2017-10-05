@@ -1,7 +1,7 @@
 Ext.define('mcat.global.Util',{
     singleton: true,
 
-    formatTime: function(totalSeconds) {
+    formatTime(totalSeconds) {
         // The slider.tipText passes thumb.value
         if (totalSeconds.value >= 0)
             totalSeconds = totalSeconds.value;
@@ -23,6 +23,22 @@ Ext.define('mcat.global.Util',{
 
         if (hours >= 1) minutes = hours + ':' + minutes;
         return minutes + ':' + seconds;
+    },
+
+    messageBox(message, icon, title) {
+        var i = Ext.Msg.INFO;
+
+        if (icon !== undefined) {
+            if (icon === 'w') i = Ext.Msg.WARNING;
+            if (icon === 'e') i = Ext.Msg.ERROR;
+        }
+
+        Ext.Msg.show({
+            title: title || 'Magnificat', 
+            msg: message, 
+            buttons: Ext.Msg.OK, 
+            icon: i
+        });
     }
 
 
