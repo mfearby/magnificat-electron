@@ -44,11 +44,6 @@ Ext.define('mcat.global.Concertmaster', {
         }, 200);
     },
 
-    // getNextTrack() {
-    //     const vp = Ext.getCmp('MainViewport');
-
-    // },
-
     getPlayer() {
         return document.getElementById('musicplayer');
     },

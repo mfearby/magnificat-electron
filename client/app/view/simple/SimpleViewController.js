@@ -10,7 +10,7 @@ Ext.define('mcat.view.simple.SimpleViewController', {
     },
 
     onGridItemDblClick: function(grid, record, item, index, e, eOpts) {
-        mcat.global.Concertmaster.play(record);
+        this.getViewModel().setCurrentRecordAndPlay(record);
     },
 
     onTreeItemContextMenu: function(view, rec, node, index, e) {

@@ -79,6 +79,7 @@ Ext.define('mcat.view.player.Player', {
             flex: 1,
             itemId: 'progressSlider',
             value: 0,
+            useTips: true,
             tipText: 'formatTime',
             bind: {
                 maxValue: '{sliderMax}'

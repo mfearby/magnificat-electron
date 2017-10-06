@@ -54,13 +54,13 @@ Ext.define('mcat.view.player.PlayerViewController', {
                 player.pause();
             }
         } else {
-            if (this.playNextTrack() === false)
+            if (!this.playNextTrack())
                 mcat.global.Util.messageBox('Please select a file to play first', 'w');
         }
     },
 
     playNextTrack() {
-        // Ask the ViewportModel to see if a folder is selected in the active tab and get the first record
+        // Ask the ViewportModel to find the first/next track from the current tab
         return this.getViewModel().getParent().lookForThenPlayNextTrack();
     },
 

@@ -1,13 +1,16 @@
-/**
- * This class is the view model for the Main view of the application.
- */
 Ext.define('mcat.view.viewport.ViewportModel', {
     extend: 'Ext.app.ViewModel',
 
     alias: 'viewmodel.viewport',
 
     lookForThenPlayNextTrack() {
-        console.log('selectedDir: ' + mcat.global.Config.selectedDir);
-        return false;
+        console.log('ViewportModel.lookForThenPlayNextTrack():');
+        const vm = this.getActiveTab().getViewModel();
+        let record = vm.lookForThenPlayNextTrack();
+        return record;
+    },
+
+    getActiveTab() {
+        return this.getView().query('tabpanel')[0].getActiveTab();
     }
 });

@@ -22,7 +22,7 @@ Ext.define('mcat.view.viewport.Viewport', {
         {
             xtype: 'player',
             region: 'north',
-            id: 'MainPlayer', // ConcertMaster.js depends on this ID!
+            id: 'MainPlayer', // Concertmaster.js depends on this ID!
             height: 50
         },
         {

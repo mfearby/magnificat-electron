@@ -3,7 +3,8 @@
     "version": "1.0.0.0",
     "framework": "ext",
     "toolkit": "classic",
-    "theme": "theme-neptune",
+    // "theme": "theme-neptune",
+    "theme": "magnificat-theme",
 
     /**
      * The list of required packages (with optional versions; default is "latest").

@@ -11,7 +11,8 @@ Ext.define('mcat.view.simple.SimpleViewModel', {
         rootDir: mcat.global.Config.musicDir,
         pathSep: mcat.global.Config.pathSep,
         selectedDir: mcat.global.Config.musicDir,
-        treeWidth: mcat.global.Config.treeWidth
+        treeWidth: mcat.global.Config.treeWidth,
+        currentRecord: null
     },
 
     formulas: {
@@ -20,9 +21,29 @@ Ext.define('mcat.view.simple.SimpleViewModel', {
             return bits[bits.length - 1];
         },
         selectedDirEncoded: function(get) {
-            let dir = encodeURIComponent(get('selectedDir'));
-            return dir;
+            return encodeURIComponent(get('selectedDir'));
         }
+    },
+
+    // Called by ViewportModel.lookForThenPlayNextTrack()
+    lookForThenPlayNextTrack() {
+        console.log('SimpleViewModel.lookForThenPlayNextTrack():');
+        const vm = this;
+        let record = vm.get('currentRecord');
+        
+        if (!record) {
+            let store = vm.getStore('Files');
+            console.log('Selecting first record from store');
+            record = store.first();
+            if (record) vm.setCurrentRecordAndPlay(record);
+        }
+        
+        return record;
+    },
+
+    setCurrentRecordAndPlay(record) {
+        this.set('currentRecord', record);
+        mcat.global.Concertmaster.play(record);
     },
 
     stores: {
