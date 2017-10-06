@@ -3,10 +3,11 @@ Ext.define('mcat.view.viewport.ViewportModel', {
 
     alias: 'viewmodel.viewport',
 
-    lookForThenPlayNextTrack() {
-        console.log('ViewportModel.lookForThenPlayNextTrack():');
+    // Called by playNextTrack() in Player.js
+    lookForThenPlayNextTrack(opts) {
+        opts = opts || {};
         const vm = this.getActiveTab().getViewModel();
-        let record = vm.lookForThenPlayNextTrack();
+        let record = vm.lookForThenPlayNextTrack(opts);
         return record;
     },
 

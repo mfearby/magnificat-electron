@@ -6,7 +6,7 @@ Ext.define('mcat.view.player.PlayerViewController', {
         var vc = this,
             vm = vc.getViewModel(),
             view = vc.getView();
-
+            
         // Create function to throttle volume level save requests
         this.debouncedSaveVolume = Ext.Function.createThrottled(function(value) {
             mcat.global.Config.save('volumeLevel', value);
@@ -25,6 +25,10 @@ Ext.define('mcat.view.player.PlayerViewController', {
 
         player.addEventListener('play', function() {
             vm.set('playerState', 'playing');
+        }, false);
+
+        player.addEventListener('ended', function() {
+            vc.playNextTrack();
         }, false);
 
         player.addEventListener('pause', function() {
@@ -59,9 +63,17 @@ Ext.define('mcat.view.player.PlayerViewController', {
         }
     },
 
-    playNextTrack() {
+    onNextButtonClick(button, e, eOpts) {
+        this.playNextTrack();
+    },
+
+    onPreviousButtonClick(button, e, eOpts) {
+        this.playNextTrack({ reverse: true });
+    },
+
+    playNextTrack(opts) {
         // Ask the ViewportModel to find the first/next track from the current tab
-        return this.getViewModel().getParent().lookForThenPlayNextTrack();
+        return this.getViewModel().getParent().lookForThenPlayNextTrack(opts);
     },
 
     onStopButtonClick(button, e, eOpts) {

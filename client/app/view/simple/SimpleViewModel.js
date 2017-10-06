@@ -26,17 +26,27 @@ Ext.define('mcat.view.simple.SimpleViewModel', {
     },
 
     // Called by ViewportModel.lookForThenPlayNextTrack()
-    lookForThenPlayNextTrack() {
-        console.log('SimpleViewModel.lookForThenPlayNextTrack():');
+    lookForThenPlayNextTrack(opts) {
         const vm = this;
+        const store = vm.getStore('Files');
         let record = vm.get('currentRecord');
         
-        if (!record) {
-            let store = vm.getStore('Files');
-            console.log('Selecting first record from store');
-            record = store.first();
-            if (record) vm.setCurrentRecordAndPlay(record);
+        // This track most likely has just finished playing, so get the next one from the store
+        if (record) {
+            var index = store.indexOf(record);
+            if (opts.reverse) {
+                if (index > 0) index = index - 1;
+            }
+            else if (index < store.getTotalCount()) {
+                index = index + 1;
+            }
+            record = store.getAt(index);
         }
+        else {
+            record = store.first();
+        }
+
+        if (record) vm.setCurrentRecordAndPlay(record);
         
         return record;
     },

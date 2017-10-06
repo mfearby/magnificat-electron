@@ -58,10 +58,10 @@ app.on('activate', function () {
     }
 });
 
-// Receive a request from the browser to read the contents of a file
-ipcMain.on('file:read', (event, path) => {
-    var blob = fs.readFileSync(path);
-    mainWindow.webContents.send('file:contents', blob);
+// Receive a request from the browser to read the contents of a file.
+ipcMain.on('file:read', (event, info) => {
+    var blob = fs.readFileSync(info.path);
+    mainWindow.webContents.send('file:contents', blob, info);
 });
 
 exports.Settings = settings;

@@ -49,7 +49,10 @@ Ext.define('mcat.view.player.Player', {
         {
             xtype: 'button',
             itemId: 'prevButton',
-            iconCls: 'x-fa fa-step-backward'
+            iconCls: 'x-fa fa-step-backward',
+            listeners: {
+                click: 'onPreviousButtonClick'
+            }
         },
         {
             xtype: 'button',
@@ -63,7 +66,10 @@ Ext.define('mcat.view.player.Player', {
         {
             xtype: 'button',
             itemId: 'nextButton',
-            iconCls: 'x-fa fa-step-forward'
+            iconCls: 'x-fa fa-step-forward',
+            listeners: {
+                click: 'onNextButtonClick'
+            }
         },
         {
             xtype: 'label',
