@@ -46,14 +46,20 @@ Ext.define('mcat.view.simple.SimpleViewModel', {
             record = store.first();
         }
 
-        if (record) vm.setCurrentRecordAndPlay(record);
+        if (record) 
+            vm.setCurrentRecordAndPlay(record);
         
         return record;
     },
 
     setCurrentRecordAndPlay(record) {
+        let currentRecord = this.get('currentRecord')
+        if (currentRecord) 
+            currentRecord.updateIsPlaying(false);
+
         this.set('currentRecord', record);
         mcat.global.Concertmaster.play(record);
+        record.updateIsPlaying(true);
     },
 
     stores: {

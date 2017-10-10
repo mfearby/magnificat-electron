@@ -39,6 +39,9 @@ Ext.define('mcat.view.simple.Simple', {
                     itemcontextmenu: 'onTreeItemContextMenu',
                     selectionchange: 'onTreeSelectionChange',
                     resize: 'onTreePanelResize'
+                },
+                getRowClass: function(record, rowIndex, rowParams, store) {
+                    return record.get('isPlaying') ? 'isPlaying' : '';
                 }
             },
             bind: {
@@ -53,6 +56,16 @@ Ext.define('mcat.view.simple.Simple', {
                 store: '{Files}'
             },
             columns: [
+                { 
+                    xtype: 'templatecolumn', 
+                    text: ' ', 
+                    width: 25, 
+                    tpl: [
+                        '<tpl if="isPlaying">',
+                        '    <span alt="now playing" class="x-fa fa-volume-off"/>',
+                        '</tpl>'
+                    ],
+                },
                 { text: 'Name', dataIndex: 'name', flex: 1 },
                 { text: 'Size', xtype: 'templatecolumn', tpl: '{[ Ext.util.Format.fileSize(values.size) ]}' },
                 { text: 'Modified', dataIndex: 'modified', xtype: 'datecolumn', format: 'd M Y, g:i a', width: 180 }

@@ -10,6 +10,11 @@ Ext.define('mcat.model.FileSystemItem', {
 
     idProperty: 'fullPath',
 
+    updateIsPlaying(isPlaying) {
+        this.set('isPlaying', isPlaying);
+        this.commit(); // removes the red triangle in the grid cell
+    },
+
     fields: [
         {
             name: 'name',
@@ -41,6 +46,10 @@ Ext.define('mcat.model.FileSystemItem', {
         },
         {
             name: 'children'
+        },
+        {
+            name: 'isPlaying',
+            type: 'boolean'
         }
     ]
 });
