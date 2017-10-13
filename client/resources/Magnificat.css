@@ -1,1 +1,20 @@
-audio { width: 90%; }
+/* http://www.colorzilla.com/gradient-editor/ */
+
+.header {
+    background: -webkit-linear-gradient(top, #e6e6e6 0%,#d0d0d0 100%);
+}
+
+.sliderBox {
+    background: -webkit-linear-gradient(top, #ebebeb 0%,#efefef 50%,#dedede 100%);
+    border-radius: 5px; border: 1px solid #D0D0C0;
+}
+
+.sliderTitle {
+    text-align: center; 
+    font-size: 12px; 
+    color: #6F6F6F; 
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    white-space: nowrap;
+}

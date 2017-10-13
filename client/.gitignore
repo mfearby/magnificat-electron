@@ -3,3 +3,4 @@ bootstrap.*
 classic.json*
 modern.json*
 .sencha
+sencha-error*.log

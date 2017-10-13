@@ -23,7 +23,7 @@ Ext.define('mcat.view.viewport.Viewport', {
             xtype: 'player',
             region: 'north',
             id: 'MainPlayer', // Concertmaster.js depends on this ID!
-            height: 50
+            height: 60
         },
         {
             xtype: 'tabpanel',

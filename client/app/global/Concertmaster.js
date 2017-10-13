@@ -45,6 +45,9 @@ Ext.define('mcat.global.Concertmaster', {
         me.previousFile = file;
         player.src = URL.createObjectURL(file);
 
+        // TODO: Do this without using an ID
+        Ext.getCmp('sliderTitle').setText(info.name);
+
         // Give the player enough time to figure out the duration. This is probably a tad
         // dodgy but it works fine. I'll get these details from the file itself, eventually.
         setTimeout(function() {

@@ -21,9 +21,7 @@ Ext.define('mcat.view.player.Player', {
         align: 'middle'
     },
 
-    style: {
-        backgroundColor: '#fff'
-    },
+    cls: 'header',
 
     items: [
         {
@@ -79,20 +77,44 @@ Ext.define('mcat.view.player.Player', {
             }
         },
         {
-            xtype: 'slider',
-            reference: 'slider',
-            ariaLabel: 'Track Progress',
+            xtype: 'container',
             flex: 1,
-            itemId: 'progressSlider',
-            value: 0,
-            useTips: true,
-            tipText: 'formatTime',
-            bind: {
-                maxValue: '{sliderMax}'
+            cls: 'sliderBox',
+            itemId: 'player_box',
+            padding: '0 10 0 10',
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
             },
-            listeners: {
-                change: 'onSliderChange'
-            }
+            items: [
+                {
+                    xtype: 'label',
+                    margin: '7 0 0 0',
+                    padding: 0,
+                    height: 15,
+                    cls: 'sliderTitle',
+                    id: 'sliderTitle', // used by Concertmaster to update with the track name
+                    text: 'Bach, Johann Sebastian - Brandenburg Concerto No. 6 in B Flat Major, 1. (no tempo indication)'
+                },
+                {
+                    xtype: 'slider',
+                    reference: 'slider',
+                    ariaLabel: 'Track Progress',
+                    flex: 1,
+                    itemId: 'progressSlider',
+                    margin: 0,
+                    padding: 0,
+                    value: 0,
+                    useTips: true,
+                    tipText: 'formatTime',
+                    bind: {
+                        maxValue: '{sliderMax}'
+                    },
+                    listeners: {
+                        change: 'onSliderChange'
+                    }
+                }
+            ]
         },
         {
             xtype: 'label',
