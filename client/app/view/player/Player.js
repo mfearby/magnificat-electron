@@ -94,7 +94,7 @@ Ext.define('mcat.view.player.Player', {
                     height: 15,
                     cls: 'sliderTitle',
                     id: 'sliderTitle', // used by Concertmaster to update with the track name
-                    text: 'Bach, Johann Sebastian - Brandenburg Concerto No. 6 in B Flat Major, 1. (no tempo indication)'
+                    text: 'No file selected'
                 },
                 {
                     xtype: 'slider',
