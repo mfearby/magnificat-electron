@@ -21,6 +21,13 @@ Ext.define('mcat.view.player.PlayerViewController', {
             progressSlider.resumeEvent('change');
             var lbl = mcat.global.Util.formatTime(player.currentTime);
             vm.set('songPosition', lbl);
+            // Count down the remaining time (initial label value is set in Concertmaster._playBlob)
+            let remaining = player.duration - player.currentTime;
+            // first time will be NaN
+            if (remaining) {
+                var lblRemain = mcat.global.Util.formatTime(remaining);
+                vm.set('songDuration', '-' + lblRemain);
+            }
         }, false);
 
         player.addEventListener('play', function() {

@@ -45,14 +45,15 @@ Ext.define('mcat.global.Concertmaster', {
         me.previousFile = file;
         player.src = URL.createObjectURL(file);
 
-        // TODO: Do this without using an ID
+        // TODO: Do this without using an ID?
         Ext.getCmp('sliderTitle').setText(info.name);
 
         // Give the player enough time to figure out the duration. This is probably a tad
         // dodgy but it works fine. I'll get these details from the file itself, eventually.
         setTimeout(function() {
             vm.set('sliderMax', Math.floor(player.duration));
-            vm.set('songDuration', mcat.global.Util.formatTime(player.duration));
+            // Value should always appear with a negative (to "count down") and also prevent label "jumping" briefly
+            vm.set('songDuration', '-' + mcat.global.Util.formatTime(player.duration));
         }, 200);
     },
 

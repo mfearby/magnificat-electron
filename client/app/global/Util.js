@@ -6,7 +6,7 @@ Ext.define('mcat.global.Util',{
         if (totalSeconds.value >= 0)
             totalSeconds = totalSeconds.value;
 
-        if (totalSeconds <= 0) return '00:00';
+        if (totalSeconds <= 0) return '0:00';
 
         var hours = Math.floor((totalSeconds / 60) / 60);
 
@@ -16,8 +16,6 @@ Ext.define('mcat.global.Util',{
         }
 
         var minutes = Math.floor(totalSeconds / 60);
-        minutes = (minutes >= 10) ? minutes : '0' + minutes;
-
         var seconds = Math.floor(totalSeconds % 60);
         seconds = (seconds >= 10) ? seconds : '0' + seconds;
 

@@ -10,8 +10,8 @@ Ext.define('mcat.view.player.PlayerViewModel', {
         sliderMax: 1, // don't allow the slider to be moved until a file is loaded
         playerState: 'stopped',
         playerMuted: false,
-        songPosition: '00:00',
-        songDuration: '00:00',
+        songPosition: '0:00',
+        songDuration: '-0:00',
         volumeLevel: mcat.global.Config.volumeLevel
     },
 

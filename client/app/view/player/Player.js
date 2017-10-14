@@ -139,6 +139,7 @@ Ext.define('mcat.view.player.Player', {
             ariaLabel: 'Volume',
             itemId: 'volumeSlider',
             margin: '0 7 0 7',
+            useTips: false, // this is distracting here
             value: 100, // default until binding takes effect
             bind: {
                 value: '{volumeLevel}'
