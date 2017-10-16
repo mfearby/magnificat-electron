@@ -52,6 +52,8 @@ Ext.define('mcat.view.simple.Simple', {
         {
             xtype: 'grid',
             region: 'center',
+            stateId: 'simpleGrid',
+            stateful: true,
             bind: {
                 store: '{Files}'
             },
@@ -66,15 +68,68 @@ Ext.define('mcat.view.simple.Simple', {
                         '</tpl>'
                     ],
                 },
-                { text: 'Name', dataIndex: 'name', flex: 1 },
-                { text: 'Size', xtype: 'templatecolumn', tpl: '{[ Ext.util.Format.fileSize(values.size) ]}' },
-                { text: 'Modified', dataIndex: 'modified', xtype: 'datecolumn', format: 'd M Y, g:i a', width: 180 }
+                { 
+                    text: 'Genre', 
+                    dataIndex: 'genre',
+                    flex: 1 
+                },
+                { 
+                    text: 'Album',
+                    dataIndex: 'album',
+                    flex: 1 
+                },
+                { 
+                    text: 'Album Artist', 
+                    dataIndex: 'albumartist', 
+                    flex: 1, 
+                    hidden: true 
+                },
+                { 
+                    text: 'Artist',
+                    dataIndex: 'artist',
+                    flex: 1 
+                },
+                { 
+                    text: 'Title',
+                    dataIndex: 'title',
+                    flex: 1 
+                },
+                { 
+                    text: 'Duration',
+                    dataIndex: 'durationNice'
+                },
+                { 
+                    text: 'File Name',
+                    dataIndex: 'name',
+                    flex: 1 
+                },
+                { 
+                    text: 'Size',
+                    xtype: 'templatecolumn',
+                    tpl: '{[ Ext.util.Format.fileSize(values.size) ]}' 
+                },
+                { 
+                    text: 'Modified',
+                    dataIndex: 'modified',
+                    xtype: 'datecolumn', 
+                    format: 'd M Y, g:i a', width: 180 
+                }
             ],
             viewConfig: {
                 listeners: {
                     itemdblclick: 'onGridItemDblClick'
                 }
-            }
+            },
+            dockedItems: [
+                {
+                    xtype: 'pagingtoolbar',
+                    dock: 'bottom',
+                    displayInfo: true,
+                    bind: {
+                        store: '{Files}'
+                    }
+                }
+            ]
         }
     ]
 

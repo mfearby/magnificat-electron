@@ -13,6 +13,11 @@ Ext.define('mcat.Application', {
 
     stores: [ ],
 
+    init: function() {
+        // This needs to be set so that stateful grids can automatically save/restore their view states
+        Ext.state.Manager.setProvider(new Ext.state.LocalStorageProvider());
+    },
+
     launch: function () {
         
     },

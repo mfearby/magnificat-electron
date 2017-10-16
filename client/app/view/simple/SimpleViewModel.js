@@ -82,10 +82,11 @@ Ext.define('mcat.view.simple.SimpleViewModel', {
                     rootProperty: 'data'
                 },
                 listeners: {
-                    exception: function(proxy, request, operation, eOpts) {
+                    exception: function(proxy, response, operation, eOpts) {
+                        var obj = Ext.JSON.decode(response.responseText)
                         Ext.Msg.show({
-                            title: 'Error: ' + response.status,
-                            msg: response.responseText,
+                            title: 'Server Error',
+                            msg: obj.message,
                             buttons: Ext.Msg.OK,
                             icon: Ext.Msg.ERROR
                         });
@@ -96,6 +97,7 @@ Ext.define('mcat.view.simple.SimpleViewModel', {
         Files: {
             model: 'mcat.model.FileSystemItem',
             autoLoad: true,
+            pageSize: 250,
             proxy: {
                 type: 'rest',
                 url: 'mrf://files/?path={selectedDirEncoded}',
@@ -104,10 +106,11 @@ Ext.define('mcat.view.simple.SimpleViewModel', {
                     rootProperty: 'data'
                 },
                 listeners: {
-                    exception: function(proxy, request, operation, eOpts) {
+                    exception: function(proxy, response, operation, eOpts) {
+                        var obj = Ext.JSON.decode(response.responseText);
                         Ext.Msg.show({
-                            title: 'Error: ' + response.status,
-                            msg: response.responseText,
+                            title: 'Server Error',
+                            msg: obj.message,
                             buttons: Ext.Msg.OK,
                             icon: Ext.Msg.ERROR
                         });

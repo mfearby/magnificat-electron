@@ -16,40 +16,34 @@ Ext.define('mcat.model.FileSystemItem', {
     },
 
     fields: [
-        {
-            name: 'name',
-            type: 'string'
-        },
-        {
-            name: 'fullPath',
-            type: 'string'
-        },
-        {
-            name: 'size',
-            type: 'integer'
-        },
-        {
-            name: 'created',
-            type: 'date'
-        },
-        {
-            name: 'modified',
-            type: 'date'
-        },
-        {
-            name: 'hasChildren',
-            type: 'boolean'
-        },
-        {
-            name: 'expandable',
-            type: 'boolean'
-        },
-        {
-            name: 'children'
-        },
-        {
-            name: 'isPlaying',
-            type: 'boolean'
+        { name: 'name',          type: 'string'  },
+        { name: 'fullPath',      type: 'string'  },
+        { name: 'size',          type: 'integer' },
+        { name: 'created',       type: 'date'    },
+        { name: 'modified',      type: 'date'    },
+
+        { name: 'hasChildren',   type: 'boolean' },
+        { name: 'expandable',    type: 'boolean' },
+        { name: 'children'                     },
+
+        { name: 'isPlaying',     type: 'boolean' },
+
+        { name: 'album',         type: 'string'  },
+        { name: 'albumartist',   type: 'string'  },
+        { name: 'diskno',        type: 'integer' },
+        { name: 'diskof',        type: 'integer' },
+        { name: 'duration',      type: 'float'   },
+        { name: 'title',         type: 'string'  },
+        { name: 'trackno',       type: 'integer' },
+        { name: 'trackof',       type: 'integer' },
+        { name: 'year',          type: 'integer' },
+        { 
+            name: 'durationNice',  
+            type: 'string', 
+            depends: 'duration',
+            convert: function(v, rec) { 
+                return mcat.global.Util.formatTime(rec.get('duration'));
+            } 
         }
     ]
 });
