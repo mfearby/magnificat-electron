@@ -106,8 +106,6 @@ module.exports = () => {
 
 
     function isMusicFile(filename) {
-        // Efficient and reliable method to get the file extension sourced from: 
-        // https://stackoverflow.com/questions/190852/how-can-i-get-file-extensions-with-javascript/12900504#12900504
         let extension = filename.slice((Math.max(0, filename.lastIndexOf(".")) || Infinity) + 1);
         return ['mp3', 'flac', 'ogg', 'm4a', 'wma'].indexOf(extension) > -1; 
     }

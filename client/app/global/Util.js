@@ -23,6 +23,7 @@ Ext.define('mcat.global.Util',{
         return minutes + ':' + seconds;
     },
 
+
     messageBox(message, icon, title) {
         var i = Ext.Msg.INFO;
 
@@ -37,7 +38,27 @@ Ext.define('mcat.global.Util',{
             buttons: Ext.Msg.OK, 
             icon: i
         });
-    }
+    },
 
+
+    getFileExtension(path) {
+        // Efficient and reliable method to get the file extension sourced from: 
+        // https://stackoverflow.com/questions/190852/how-can-i-get-file-extensions-with-javascript/12900504#12900504
+        return path.slice((Math.max(0, path.lastIndexOf(".")) || Infinity) + 1);
+    },
+
+
+    getMimeType(filename) {
+        const ext = this.getFileExtension(filename);
+        const types = {
+            'flac': 'audio/flag',
+            'm4a': 'audio/mp4',
+            'mp3': 'audio/mpeg',
+            'ogg': 'audio/ogg',
+            'wma': 'audio/x-ms-wma'
+        };
+        var mime = types[ext] !== undefined ? types[ext] : '';
+        return mime;
+    }
 
 });

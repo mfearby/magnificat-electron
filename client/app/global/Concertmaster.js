@@ -15,16 +15,17 @@ Ext.define('mcat.global.Concertmaster', {
 
     play(record) {
         const me = this,
-              path = record.get('fullPath'),
+              fullPath = record.get('fullPath'),
               { ipcRenderer } = require('electron'); 
         // Send a message to the main process to read a file; the Ext JS record
         // can't be send back and forth between processes, or else the app freezes!
         ipcRenderer.send('file:read', {
-            path: record.get('fullPath'),
-            name: record.get('name'),
-            type: 'audio/mpeg'
+            path: fullPath,
+            name: record.get('sliderTitle'),
+            type: mcat.global.Util.getMimeType(fullPath)
         });
     },
+
 
     _playBlob(blob, info) {
         const me = this,

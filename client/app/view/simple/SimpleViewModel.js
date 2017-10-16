@@ -84,12 +84,7 @@ Ext.define('mcat.view.simple.SimpleViewModel', {
                 listeners: {
                     exception: function(proxy, response, operation, eOpts) {
                         var obj = Ext.JSON.decode(response.responseText)
-                        Ext.Msg.show({
-                            title: 'Server Error',
-                            msg: obj.message,
-                            buttons: Ext.Msg.OK,
-                            icon: Ext.Msg.ERROR
-                        });
+                        mcat.global.Util.messageBox(obj.message, 'e');
                     }
                 }
             }
@@ -108,12 +103,7 @@ Ext.define('mcat.view.simple.SimpleViewModel', {
                 listeners: {
                     exception: function(proxy, response, operation, eOpts) {
                         var obj = Ext.JSON.decode(response.responseText);
-                        Ext.Msg.show({
-                            title: 'Server Error',
-                            msg: obj.message,
-                            buttons: Ext.Msg.OK,
-                            icon: Ext.Msg.ERROR
-                        });
+                        mcat.global.Util.messageBox(obj.message, 'e');
                     }
                 }
             }
