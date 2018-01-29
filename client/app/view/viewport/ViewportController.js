@@ -11,5 +11,9 @@ Ext.define('mcat.view.viewport.ViewportController', {
 
     onPanelAfterRender: function(container, layout, eOpts) {
         this.lookup('tabs').tabBar.hide();
+    },
+
+    onTabChange: function(panel, newTab, oldTab) {
+        
     }
 });

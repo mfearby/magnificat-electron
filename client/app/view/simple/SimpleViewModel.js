@@ -8,6 +8,7 @@ Ext.define('mcat.view.simple.SimpleViewModel', {
     ],
 
     data: {
+        title: 'Music',
         rootDir: mcat.global.Config.musicDir,
         pathSep: mcat.global.Config.pathSep,
         selectedDir: mcat.global.Config.musicDir,
@@ -106,7 +107,12 @@ Ext.define('mcat.view.simple.SimpleViewModel', {
                         mcat.global.Util.messageBox(obj.message, 'e');
                     }
                 }
-            }
+            }/*,
+            listeners: {
+                load: function (store, records, success, operation, eOpts) {
+                    console.log(this);
+                }
+            }*/
         }
     }
 });

@@ -1,5 +1,5 @@
 Ext.define('mcat.view.simple.Simple', {
-    extend: 'Ext.container.Container',
+    extend: 'Ext.panel.Panel',
     alias: 'widget.simple',
 
     requires: [
@@ -13,14 +13,14 @@ Ext.define('mcat.view.simple.Simple', {
         type: 'simple'
     },
     controller: 'simple',
-
     listeners: {
         afterrender: 'onPanelAfterRender'
     },
-
     layout: 'border',
-    title: 'Simple View',
     border: false,
+    bind: {
+        title: '{title}',
+    },
 
     items: [
         {
@@ -33,9 +33,12 @@ Ext.define('mcat.view.simple.Simple', {
             displayField: 'name',
             border: false,
             width: 230, // need default until binding takes effect or else 'Layout run failed' error occurs!
-            bodyStyle: { border: 0 },
+            bodyStyle: { 
+                border: 0 
+            },
             viewConfig: {
                 listeners: {
+                    beforeitemcontextmenu: 'onBeforeItemContextMenu',
                     itemcontextmenu: 'onTreeItemContextMenu',
                     selectionchange: 'onTreeSelectionChange',
                     resize: 'onTreePanelResize'
@@ -64,7 +67,7 @@ Ext.define('mcat.view.simple.Simple', {
                     width: 25, 
                     tpl: [
                         '<tpl if="isPlaying">',
-                        '    <span alt="now playing" class="x-fa fa-volume-off"/>',
+                        '    <span alt="now playing" class="x-fa fa-volume-up"/>',
                         '</tpl>'
                     ],
                 },

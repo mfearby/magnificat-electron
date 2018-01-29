@@ -30,5 +30,34 @@ Ext.define('mcat.Application', {
                 }
             }
         );
+    },
+
+    loadNewTab: function(rec) {
+        const tabs = Ext.getCmp('MainTabs');
+        const fullPath = rec.get('fullPath');
+        const tab = Ext.createByAlias('widget.simple', {
+            closable: true,
+            viewModel: {
+                data: {
+                    title: rec.get('name'),
+                    rootDir: fullPath,
+                    selectedDir: fullPath,
+                }
+            },
+            listeners: {
+                beforeclose: function(panel) {
+                    // count is still 2 until after this tab is destroyed
+                    if (tabs.items.getCount() === 2) {
+                        tabs.tabBar.hide();
+                        //tabs.updateLayout();
+                    }
+                }
+            }
+        });
+
+        tabs.add(tab);
+        tabs.setActiveTab(tab);
+        tabs.tabBar.show();
+        //tabs.updateLayout();
     }
 });

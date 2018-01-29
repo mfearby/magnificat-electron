@@ -28,13 +28,17 @@ Ext.define('mcat.view.viewport.Viewport', {
         {
             xtype: 'tabpanel',
             region: 'center',
+            id: 'MainTabs',
             reference: 'tabs',
             items: [
                 {
                     xtype: 'simple'
                 }
-            ]
+            ],
+            listeners: {
+                tabchange: 'onTabChange'
+            }
         }
-    ]
+    ]    
 
 });

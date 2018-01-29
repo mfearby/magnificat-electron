@@ -13,17 +13,24 @@ Ext.define('mcat.view.simple.SimpleViewController', {
         this.getViewModel().setCurrentRecordAndPlay(record);
     },
 
+    onBeforeItemContextMenu: function(view, rec, node, index, e) {
+        // const sel = view.getSelectionModel().isSelected(rec);
+        // console.log('sel before: ' + sel);
+        // console.log(node);
+        // e.stopEvent();
+    },
+
     onTreeItemContextMenu: function(view, rec, node, index, e) {
         e.stopEvent();
+        const vc = this;
+
         // Show the context menu only for the root tree node
         if (index === 0) {
             // Make sure the item under the right-click is selected, too
             // if (!view.getSelectionModel().isSelected(rec)) {
             //     view.getSelectionModel().select(rec);
             // }
-
-            const vc = this;
-            const contextMenu = Ext.create('Ext.menu.Menu', {
+            Ext.create('Ext.menu.Menu', {
                 items: [{
                     text: 'Select Folder...',
                     iconCls: 'x-fa fa-folder-open',
@@ -35,9 +42,21 @@ Ext.define('mcat.view.simple.SimpleViewController', {
                         });
                     }
                 }]
-            });
-            contextMenu.showAt(e.getXY());
+            }).showAt(e.getXY());
+
+        } else {
+            // Show the "Open in new Tab" menu
+            Ext.create('Ext.menu.Menu', {
+                items: [{
+                    text: 'Open in new tab',
+                    iconCls: 'x-fa fa-folder-open',
+                    handler: function(widget, event) {
+                        mcat.getApplication().loadNewTab(rec);
+                    }
+                }]
+            }).showAt(e.getXY());
         }
+
         return false;
     },
 
@@ -45,10 +64,24 @@ Ext.define('mcat.view.simple.SimpleViewController', {
         if (selected.length == 0) return;
         const fullPath = selected[0].get('fullPath');
         const vm = this.getViewModel();
+        
         vm.set('selectedDir', fullPath);
+
         // Force all bindings to update or else the store will be using the previously selected path
         vm.notify();
-        vm.getStore('Files').load();
+
+        vm.getStore('Files').load(function(records, operation, success) {
+            const currentRecord = vm.get('currentRecord');
+            if (!currentRecord) return;
+            const fullPath = currentRecord.get('fullPath');
+            // Reset the isPlaying property again
+            Ext.each(records, function(rec, index) {
+                if (rec.get('fullPath') === fullPath) {
+                    rec.updateIsPlaying(true);
+                }
+            });
+        });
+
         // Remember the user's last selected folder in the tree
         mcat.global.Config.save('selectedDir', fullPath);
     },
