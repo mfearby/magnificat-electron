@@ -59,5 +59,25 @@ Ext.define('mcat.Application', {
         tabs.setActiveTab(tab);
         tabs.tabBar.show();
         //tabs.updateLayout();
+    },
+
+    updateControllingTab(tab) {
+        this.controllingTab = tab;
+        const tabs = Ext.getCmp('MainTabs');
+        // Loop through all tabs and tell all but the playing tab to not show the playing icon
+        tabs.items.each(function (panel) {
+            if (tab !== panel) {
+                panel.getViewModel().anotherTabIsPlaying();
+            }
+        });
+    },
+
+    // Keep a reference to the tab that's controlling the player
+    controllingTab: null,
+
+    // Called by PlayerViewController to advise the controlling tab about play/pause toggling
+    toggleControllingTab(playing) {
+        this.controllingTab.getViewModel().playerToggle(playing);
     }
+
 });

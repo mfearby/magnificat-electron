@@ -26,7 +26,8 @@ Ext.define('mcat.model.FileSystemItem', {
         { name: 'expandable',    type: 'boolean' },
         { name: 'children'                     },
 
-        { name: 'isPlaying',     type: 'boolean' },
+        // False means it's paused and null means neither playing or paused
+        { name: 'isPlaying',     type: 'boolean',   allowNull: true },
 
         { name: 'album',         type: 'string'  },
         { name: 'albumartist',   type: 'string'  },

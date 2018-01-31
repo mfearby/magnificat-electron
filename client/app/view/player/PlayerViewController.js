@@ -32,6 +32,7 @@ Ext.define('mcat.view.player.PlayerViewController', {
 
         player.addEventListener('play', function() {
             vm.set('playerState', 'playing');
+            vc.notifyCurrentTab(true);
         }, false);
 
         player.addEventListener('ended', function() {
@@ -40,6 +41,7 @@ Ext.define('mcat.view.player.PlayerViewController', {
 
         player.addEventListener('pause', function() {
             vm.set('playerState', 'paused');
+            vc.notifyCurrentTab(false);
         }, false);
 
         player.addEventListener('volumechange', function(e) {
@@ -47,6 +49,10 @@ Ext.define('mcat.view.player.PlayerViewController', {
             vm.set('playerMuted', muted);
             vm.set('volumeLevel', player.volume * 100)
         }, false);
+    },
+
+    notifyCurrentTab(playing) {
+        mcat.getApplication().toggleControllingTab(playing);
     },
 
     // called by slider.tipText in Player.js

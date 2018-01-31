@@ -9,11 +9,14 @@ Ext.define('mcat.view.simple.SimpleViewModel', {
 
     data: {
         title: 'Music',
+        isControllingPlayer: false,
+        isPlaying: null,
         rootDir: mcat.global.Config.musicDir,
         pathSep: mcat.global.Config.pathSep,
         selectedDir: mcat.global.Config.musicDir,
         treeWidth: mcat.global.Config.treeWidth,
-        currentRecord: null
+        currentRecord: null,
+        currentTreeRecord: null
     },
 
     formulas: {
@@ -23,6 +26,11 @@ Ext.define('mcat.view.simple.SimpleViewModel', {
         },
         selectedDirEncoded: function(get) {
             return encodeURIComponent(get('selectedDir'));
+        },
+        tabIconClass: function(get) {
+            if (!get('isControllingPlayer')) return '';
+            if (get('isPlaying') === null) return '';
+            return get('isPlaying') ? 'x-fa fa-volume-up' : 'x-fa fa-volume-off';
         }
     },
 
@@ -47,18 +55,51 @@ Ext.define('mcat.view.simple.SimpleViewModel', {
             record = store.first();
         }
 
-        if (record) 
+        if (record) {
+            vm.setIsPlaying(true, true);
             vm.setCurrentRecordAndPlay(record);
+        }
+            
         
         return record;
+    },
+
+    // This is called by updateControllingTab() in Application.js
+    anotherTabIsPlaying() {
+        this.setIsPlaying(false, false);
+    },
+
+    // This is called by currentTabPlayerToggle() in Application.js
+    playerToggle(playing) {
+        this.set('isPlaying', playing);
+        let currentRecord = this.get('currentRecord');
+        if (currentRecord)
+            currentRecord.updateIsPlaying(playing);
+    },
+
+    // Update the icon for this tab so that the user knows which one is playing music
+    setIsPlaying(controlling, playing) {
+        this.set('isControllingPlayer', controlling);
+        this.set('isPlaying', playing);
+
+        let currentRecord = this.get('currentRecord')
+        if (!playing && currentRecord) {
+            // currentRecord.updateIsPlaying(null);
+
+            // If it was previously playing, change it to 'paused'
+            if (currentRecord.get('isPlaying'))
+                currentRecord.updateIsPlaying(false);
+        }
     },
 
     setCurrentRecordAndPlay(record) {
         let currentRecord = this.get('currentRecord')
         if (currentRecord) 
-            currentRecord.updateIsPlaying(false);
+            currentRecord.updateIsPlaying(null);
 
+        this.setIsPlaying(true, true);
         this.set('currentRecord', record);
+
         mcat.global.Concertmaster.play(record);
         record.updateIsPlaying(true);
     },
@@ -81,13 +122,13 @@ Ext.define('mcat.view.simple.SimpleViewModel', {
                 reader: {
                     type: 'json',
                     rootProperty: 'data'
-                },
+                }/*,
                 listeners: {
                     exception: function(proxy, response, operation, eOpts) {
                         var obj = Ext.JSON.decode(response.responseText)
                         mcat.global.Util.messageBox(obj.message, 'e');
                     }
-                }
+                }*/
             }
         },
         Files: {
@@ -100,19 +141,17 @@ Ext.define('mcat.view.simple.SimpleViewModel', {
                 reader: {
                     type: 'json',
                     rootProperty: 'data'
-                },
+                }/*,
                 listeners: {
                     exception: function(proxy, response, operation, eOpts) {
                         var obj = Ext.JSON.decode(response.responseText);
                         mcat.global.Util.messageBox(obj.message, 'e');
                     }
-                }
-            }/*,
+                }*/
+            },
             listeners: {
-                load: function (store, records, success, operation, eOpts) {
-                    console.log(this);
-                }
-            }*/
+                load: 'onFilesStoreLoad'
+            }
         }
     }
 });

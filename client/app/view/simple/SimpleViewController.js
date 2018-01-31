@@ -9,27 +9,56 @@ Ext.define('mcat.view.simple.SimpleViewController', {
         }
     },
 
+    onPanelFocus: function(container, event, eOpts) {
+        //this.lookup('simpleGrid').getView().refresh();
+    },
+
     onGridItemDblClick: function(grid, record, item, index, e, eOpts) {
+        mcat.getApplication().updateControllingTab(this.getView());
         this.getViewModel().setCurrentRecordAndPlay(record);
     },
 
-    onBeforeItemContextMenu: function(view, rec, node, index, e) {
-        // const sel = view.getSelectionModel().isSelected(rec);
-        // console.log('sel before: ' + sel);
-        // console.log(node);
-        // e.stopEvent();
+    onFilesStoreLoad: function(store, records, success, operation, eOpts) {
+        const vm = this.getViewModel();
+        
+        if (!vm.get('isControllingPlayer'))
+            return;
+
+        const currentRecord = vm.get('currentRecord');
+        if (!currentRecord) 
+            return;
+
+        const isPlaying = vm.get('isPlaying');
+        const fullPath = currentRecord.get('fullPath');
+
+        // Reset the isPlaying property again
+        Ext.each(records, function(rec, index) {
+            if (rec.get('fullPath') === fullPath) {
+                // console.log('isPlaying ' + isPlaying + ' for ' + rec.get('name'));
+                rec.updateIsPlaying(isPlaying);
+                // Set this again in case the user browsed elsewhere then back again or refreshed the
+                // list, which means that the currentRecord is no longer the same object as this one.
+                vm.set('currentRecord', rec);
+            }
+        });
     },
 
-    onTreeItemContextMenu: function(view, rec, node, index, e) {
+
+    ///////////////////////
+    // TREE PANEL EVENTS //
+    ///////////////////////
+
+    onBeforeCellMouseDown: function(view, td, cellIndex, record, tr, rowIndex, e) {
+        // This is all that's required to prevent items being selected when right-clicking
+        return false;
+    },
+
+    onItemContextMenu: function(view, rec, node, index, e) {
         e.stopEvent();
         const vc = this;
 
         // Show the context menu only for the root tree node
         if (index === 0) {
-            // Make sure the item under the right-click is selected, too
-            // if (!view.getSelectionModel().isSelected(rec)) {
-            //     view.getSelectionModel().select(rec);
-            // }
             Ext.create('Ext.menu.Menu', {
                 items: [{
                     text: 'Select Folder...',
@@ -56,37 +85,30 @@ Ext.define('mcat.view.simple.SimpleViewController', {
                 }]
             }).showAt(e.getXY());
         }
-
-        return false;
     },
 
-    onTreeSelectionChange: function(model, selected, eOpts) {
+    onSelectionChange: function(model, selected, eOpts) {
         if (selected.length == 0) return;
-        const fullPath = selected[0].get('fullPath');
-        const vm = this.getViewModel();
-        
-        vm.set('selectedDir', fullPath);
 
+        const vm = this.getViewModel();
+        const treeRec = selected[0];
+        vm.set('currentTreeRecord', treeRec);
+
+        const treeFullPath = treeRec.get('fullPath');
+        vm.set('selectedDir', treeFullPath);
+        
         // Force all bindings to update or else the store will be using the previously selected path
         vm.notify();
 
         vm.getStore('Files').load(function(records, operation, success) {
-            const currentRecord = vm.get('currentRecord');
-            if (!currentRecord) return;
-            const fullPath = currentRecord.get('fullPath');
-            // Reset the isPlaying property again
-            Ext.each(records, function(rec, index) {
-                if (rec.get('fullPath') === fullPath) {
-                    rec.updateIsPlaying(true);
-                }
-            });
+            // code moved to onFilesStoreLoad()
         });
 
         // Remember the user's last selected folder in the tree
-        mcat.global.Config.save('selectedDir', fullPath);
+        mcat.global.Config.save('selectedDir', treeFullPath);
     },
 
-    onTreePanelResize: function(panel, width, height, oldWidth, oldHeight, eOpts) {
+    onResize: function(panel, width, height, oldWidth, oldHeight, eOpts) {
         if (oldWidth === undefined) return;
         mcat.global.Config.save('treeWidth', width);
     },
@@ -94,6 +116,8 @@ Ext.define('mcat.view.simple.SimpleViewController', {
     reloadTree(newPath) {
         const vm = this.getViewModel();
         vm.set('rootDir', newPath);
+        var title = newPath.split(mcat.global.Config.pathSep).pop();
+        vm.set('title', title);
         vm.getStore('Folders').reload();
     },
 

@@ -14,13 +14,16 @@ Ext.define('mcat.view.simple.Simple', {
     },
     controller: 'simple',
     listeners: {
-        afterrender: 'onPanelAfterRender'
+        afterrender: 'onPanelAfterRender',
+        focus: 'onPanelFocus'
     },
     layout: 'border',
     border: false,
     bind: {
         title: '{title}',
+        iconCls: '{tabIconClass}'
     },
+    iconAlign: 'right',
 
     items: [
         {
@@ -36,13 +39,13 @@ Ext.define('mcat.view.simple.Simple', {
             bodyStyle: { 
                 border: 0 
             },
+            listeners: {
+                beforecellmousedown: 'onBeforeCellMouseDown',
+                selectionchange: 'onSelectionChange',
+                itemcontextmenu: 'onItemContextMenu',
+                resize: 'onResize'
+            },
             viewConfig: {
-                listeners: {
-                    beforeitemcontextmenu: 'onBeforeItemContextMenu',
-                    itemcontextmenu: 'onTreeItemContextMenu',
-                    selectionchange: 'onTreeSelectionChange',
-                    resize: 'onTreePanelResize'
-                },
                 getRowClass: function(record, rowIndex, rowParams, store) {
                     return record.get('isPlaying') ? 'isPlaying' : '';
                 }
@@ -55,6 +58,7 @@ Ext.define('mcat.view.simple.Simple', {
         {
             xtype: 'grid',
             region: 'center',
+            reference: 'simpleGrid',
             stateId: 'simpleGrid',
             stateful: true,
             bind: {
@@ -68,6 +72,8 @@ Ext.define('mcat.view.simple.Simple', {
                     tpl: [
                         '<tpl if="isPlaying">',
                         '    <span alt="now playing" class="x-fa fa-volume-up"/>',
+                        '<tpl elseif="isPlaying == false">',
+                        '    <span alt="paused" class="x-fa fa-volume-off"/>',
                         '</tpl>'
                     ],
                 },
