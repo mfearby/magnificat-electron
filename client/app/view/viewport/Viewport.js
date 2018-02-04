@@ -15,6 +15,7 @@ Ext.define('mcat.view.viewport.Viewport', {
     id: 'MainViewport', // ConcertMaster.js depends on this ID!
 
     listeners: {
+        beforerender: 'onPanelBeforeRender', 
         afterrender: 'onPanelAfterRender'
     },
 
@@ -29,11 +30,12 @@ Ext.define('mcat.view.viewport.Viewport', {
             xtype: 'tabpanel',
             region: 'center',
             id: 'MainTabs',
-            reference: 'tabs',
+            reference: 'tabPanel',
             items: [
-                {
-                    xtype: 'simple'
-                }
+                // Moved to: ViewportController.addFirstTab()
+                // {
+                //     xtype: 'simple'
+                // }
             ],
             listeners: {
                 tabchange: 'onTabChange'

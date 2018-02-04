@@ -3,26 +3,52 @@ Ext.define('mcat.view.simple.SimpleViewController', {
     alias: 'controller.simple',
 
     onPanelAfterRender: function(container, layout, eOpts) {
-        const dir = mcat.global.Config.selectedDir;
+        const dir = this.getViewModel().get('selectedDir');
         if (dir) {
             this.expandTreePath(dir);
         }
     },
 
-    onPanelFocus: function(container, event, eOpts) {
-        //this.lookup('simpleGrid').getView().refresh();
+    
+    onPanelActivate: function(panel) {
+        // TO DO: this doesn't seem to be setting the new id for a newly-added tab
+        //        probably because the sequential integer ID on the model starts at 1 each app load
+        const tabState = this.getViewModel().get('tabState');
+        const id = tabState.get('id');
+        mcat.global.State.setActiveTab(id);
     },
+
+
+    onPanelBeforeDestroy: function(panel, eOpts) {
+        this.getViewModel().get('tabState').erase();
+    },
+
+
+    onResize: function(panel, width, height, oldWidth, oldHeight, eOpts) {
+        if (oldWidth === undefined) return;
+        this.getViewModel().updateTabState({ 'treeWidth': width });
+    },
+
+
+    ///////////////////////
+    // GRID PANEL EVENTS //
+    ///////////////////////
 
     onGridItemDblClick: function(grid, record, item, index, e, eOpts) {
         mcat.getApplication().updateControllingTab(this.getView());
         this.getViewModel().setCurrentRecordAndPlay(record);
     },
 
+
     onFilesStoreLoad: function(store, records, success, operation, eOpts) {
         const vm = this.getViewModel();
         
         if (!vm.get('isControllingPlayer'))
             return;
+
+
+        // TO DO: use currentTrackPath to select record for new tabs
+
 
         const currentRecord = vm.get('currentRecord');
         if (!currentRecord) 
@@ -48,12 +74,12 @@ Ext.define('mcat.view.simple.SimpleViewController', {
     // TREE PANEL EVENTS //
     ///////////////////////
 
-    onBeforeCellMouseDown: function(view, td, cellIndex, record, tr, rowIndex, e) {
+    onTreeBeforeCellMouseDown: function(view, td, cellIndex, record, tr, rowIndex, e) {
         // This is all that's required to prevent items being selected when right-clicking
         return false;
     },
 
-    onItemContextMenu: function(view, rec, node, index, e) {
+    onTreeItemContextMenu: function(view, rec, node, index, e) {
         e.stopEvent();
         const vc = this;
 
@@ -67,7 +93,6 @@ Ext.define('mcat.view.simple.SimpleViewController', {
                         const mainProcess = require('electron').remote.require('./main');
                         mainProcess.selectDirectory(function(newFolder) {
                             vc.reloadTree(newFolder);
-                            mcat.global.Config.save('lastDir', newFolder);
                         });
                     }
                 }]
@@ -80,14 +105,18 @@ Ext.define('mcat.view.simple.SimpleViewController', {
                     text: 'Open in new tab',
                     iconCls: 'x-fa fa-folder-open',
                     handler: function(widget, event) {
-                        mcat.getApplication().loadNewTab(rec);
+                        mcat.getApplication().loadNewTab({
+                            title: rec.get('name'),
+                            rootDir: rec.get('fullPath'),
+                            selectedDir: rec.get('fullPath')
+                        });
                     }
                 }]
             }).showAt(e.getXY());
         }
     },
 
-    onSelectionChange: function(model, selected, eOpts) {
+    onTreeSelectionChange: function(model, selected, eOpts) {
         if (selected.length == 0) return;
 
         const vm = this.getViewModel();
@@ -96,6 +125,7 @@ Ext.define('mcat.view.simple.SimpleViewController', {
 
         const treeFullPath = treeRec.get('fullPath');
         vm.set('selectedDir', treeFullPath);
+        vm.updateTabState({ 'selectedDir': treeFullPath });
         
         // Force all bindings to update or else the store will be using the previously selected path
         vm.notify();
@@ -103,22 +133,23 @@ Ext.define('mcat.view.simple.SimpleViewController', {
         vm.getStore('Files').load(function(records, operation, success) {
             // code moved to onFilesStoreLoad()
         });
-
-        // Remember the user's last selected folder in the tree
-        mcat.global.Config.save('selectedDir', treeFullPath);
-    },
-
-    onResize: function(panel, width, height, oldWidth, oldHeight, eOpts) {
-        if (oldWidth === undefined) return;
-        mcat.global.Config.save('treeWidth', width);
     },
     
+
     reloadTree(newPath) {
-        const vm = this.getViewModel();
+        const vc = this;
+        const vm = vc.getViewModel();
         vm.set('rootDir', newPath);
         var title = newPath.split(mcat.global.Config.pathSep).pop();
         vm.set('title', title);
         vm.getStore('Folders').reload();
+
+        vm.updateTabState({
+            'rootDir': newPath,
+            'selectedDir': newPath,
+            'title': title,
+            'currentTrackPath': null
+        });
     },
 
     expandTreePath: function(path) {

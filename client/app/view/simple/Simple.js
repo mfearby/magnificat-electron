@@ -15,7 +15,8 @@ Ext.define('mcat.view.simple.Simple', {
     controller: 'simple',
     listeners: {
         afterrender: 'onPanelAfterRender',
-        focus: 'onPanelFocus'
+        activate: 'onPanelActivate',
+        beforedestroy: 'onPanelBeforeDestroy'
     },
     layout: 'border',
     border: false,
@@ -40,9 +41,9 @@ Ext.define('mcat.view.simple.Simple', {
                 border: 0 
             },
             listeners: {
-                beforecellmousedown: 'onBeforeCellMouseDown',
-                selectionchange: 'onSelectionChange',
-                itemcontextmenu: 'onItemContextMenu',
+                beforecellmousedown: 'onTreeBeforeCellMouseDown',
+                selectionchange: 'onTreeSelectionChange',
+                itemcontextmenu: 'onTreeItemContextMenu',
                 resize: 'onResize'
             },
             viewConfig: {

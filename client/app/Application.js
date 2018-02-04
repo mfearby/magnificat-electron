@@ -8,7 +8,8 @@ Ext.define('mcat.Application', {
     requires: [
         'mcat.global.Config',
         'mcat.global.Util',
-        'mcat.global.Concertmaster'
+        'mcat.global.Concertmaster',
+        'mcat.global.State'
     ],
 
     stores: [ ],
@@ -19,29 +20,30 @@ Ext.define('mcat.Application', {
     },
 
     launch: function () {
-        
+        // FYI: Viewport is loaded via the 'mainView' property in ../app.js
     },
 
-    onAppUpdate: function () {
-        Ext.Msg.confirm('Application Update', 'This application has an update, reload?',
-            function (choice) {
-                if (choice === 'yes') {
-                    window.location.reload();
-                }
-            }
-        );
-    },
+    loadNewTab: function(options) {
+        let data = {}
+        Ext.apply(data, options);
 
-    loadNewTab: function(rec) {
+        let state = {
+            type: 'mcat.model.TabStateItem'
+        };
+
+        // Link to the existing record if it's in local storage, otherwise create a new one
+        if (options.id !== undefined)
+            state.id = options.id;
+        else 
+            state.create = options;
+
         const tabs = Ext.getCmp('MainTabs');
-        const fullPath = rec.get('fullPath');
         const tab = Ext.createByAlias('widget.simple', {
             closable: true,
             viewModel: {
-                data: {
-                    title: rec.get('name'),
-                    rootDir: fullPath,
-                    selectedDir: fullPath,
+                data: data,
+                links: {
+                    tabState: state
                 }
             },
             listeners: {
@@ -49,16 +51,17 @@ Ext.define('mcat.Application', {
                     // count is still 2 until after this tab is destroyed
                     if (tabs.items.getCount() === 2) {
                         tabs.tabBar.hide();
-                        //tabs.updateLayout();
                     }
                 }
             }
         });
-
+        
         tabs.add(tab);
         tabs.setActiveTab(tab);
         tabs.tabBar.show();
-        //tabs.updateLayout();
+
+        // Return the tab; used to setActiveTab() in ViewportController > addTabs()
+        return tab;
     },
 
     updateControllingTab(tab) {

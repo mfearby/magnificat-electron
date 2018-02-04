@@ -1,6 +1,11 @@
 Ext.define('mcat.global.Config', {
     singleton: true,
 
+    ////////////////////////////////////////////////////////////////////////////////////////
+    // Use this class for saving app-level settings, like window size, volume level, etc. //
+    // File will be in the user's profile somewhere: "./magnificat/user-preferences.json" //
+    ////////////////////////////////////////////////////////////////////////////////////////
+
     constructor: function (config) {
         const settings = this.getSettingsObject().data;
         Ext.apply(this, settings);

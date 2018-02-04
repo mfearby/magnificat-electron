@@ -9,12 +9,11 @@ Ext.define('mcat.view.simple.SimpleViewModel', {
 
     data: {
         title: 'Music',
-        isControllingPlayer: false,
-        isPlaying: null,
         rootDir: mcat.global.Config.musicDir,
-        pathSep: mcat.global.Config.pathSep,
         selectedDir: mcat.global.Config.musicDir,
-        treeWidth: mcat.global.Config.treeWidth,
+        pathSep: mcat.global.Config.pathSep,
+        isPlaying: null,
+        isControllingPlayer: false,
         currentRecord: null,
         currentTreeRecord: null
     },
@@ -31,77 +30,11 @@ Ext.define('mcat.view.simple.SimpleViewModel', {
             if (!get('isControllingPlayer')) return '';
             if (get('isPlaying') === null) return '';
             return get('isPlaying') ? 'x-fa fa-volume-up' : 'x-fa fa-volume-off';
+        },
+        treeWidth: function(get) {
+            const state = get('tabState');
+            return state ? state.get('treeWidth') : 250;
         }
-    },
-
-    // Called by ViewportModel.lookForThenPlayNextTrack()
-    lookForThenPlayNextTrack(opts) {
-        const vm = this;
-        const store = vm.getStore('Files');
-        let record = vm.get('currentRecord');
-        
-        // This track most likely has just finished playing, so get the next one from the store
-        if (record) {
-            var index = store.indexOf(record);
-            if (opts.reverse) {
-                if (index > 0) index = index - 1;
-            }
-            else if (index < store.getTotalCount()) {
-                index = index + 1;
-            }
-            record = store.getAt(index);
-        }
-        else {
-            record = store.first();
-        }
-
-        if (record) {
-            vm.setIsPlaying(true, true);
-            vm.setCurrentRecordAndPlay(record);
-        }
-            
-        
-        return record;
-    },
-
-    // This is called by updateControllingTab() in Application.js
-    anotherTabIsPlaying() {
-        this.setIsPlaying(false, false);
-    },
-
-    // This is called by currentTabPlayerToggle() in Application.js
-    playerToggle(playing) {
-        this.set('isPlaying', playing);
-        let currentRecord = this.get('currentRecord');
-        if (currentRecord)
-            currentRecord.updateIsPlaying(playing);
-    },
-
-    // Update the icon for this tab so that the user knows which one is playing music
-    setIsPlaying(controlling, playing) {
-        this.set('isControllingPlayer', controlling);
-        this.set('isPlaying', playing);
-
-        let currentRecord = this.get('currentRecord')
-        if (!playing && currentRecord) {
-            // currentRecord.updateIsPlaying(null);
-
-            // If it was previously playing, change it to 'paused'
-            if (currentRecord.get('isPlaying'))
-                currentRecord.updateIsPlaying(false);
-        }
-    },
-
-    setCurrentRecordAndPlay(record) {
-        let currentRecord = this.get('currentRecord')
-        if (currentRecord) 
-            currentRecord.updateIsPlaying(null);
-
-        this.setIsPlaying(true, true);
-        this.set('currentRecord', record);
-
-        mcat.global.Concertmaster.play(record);
-        record.updateIsPlaying(true);
     },
 
     stores: {
@@ -153,5 +86,89 @@ Ext.define('mcat.view.simple.SimpleViewModel', {
                 load: 'onFilesStoreLoad'
             }
         }
+    },
+
+
+    // Called by ViewportModel.js > lookForThenPlayNextTrack()
+    lookForThenPlayNextTrack(opts) {
+        const vm = this;
+        const store = vm.getStore('Files');
+        let record = vm.get('currentRecord');
+        
+        // This track most likely has just finished playing, so get the next one from the store
+        if (record) {
+            var index = store.indexOf(record);
+            if (opts.reverse) {
+                if (index > 0) index = index - 1;
+            }
+            else if (index < store.getTotalCount()) {
+                index = index + 1;
+            }
+            record = store.getAt(index);
+        }
+        else {
+            record = store.first();
+        }
+
+        if (record) {
+            vm.setIsPlaying(true, true);
+            vm.setCurrentRecordAndPlay(record);
+        }
+        
+        return record;
+    },
+
+
+    // This is called by Application.js > updateControllingTab()
+    anotherTabIsPlaying() {
+        this.setIsPlaying(false, false);
+    },
+
+
+    // This is called by Application.js > currentTabPlayerToggle()
+    playerToggle(playing) {
+        this.set('isPlaying', playing);
+        let rec = this.get('currentRecord');
+        if (rec) 
+            rec.updateIsPlaying(playing);
+    },
+
+
+    // Update the icon for this tab so that the user knows which one is playing music
+    setIsPlaying(controlling, playing) {
+        this.set('isControllingPlayer', controlling);
+        this.set('isPlaying', playing);
+        let rec = this.get('currentRecord')
+        if (!playing && rec) {
+            // If it was previously playing, change it to 'paused'
+            if (rec.get('isPlaying')) 
+                rec.updateIsPlaying(false);
+        }
+    },
+
+
+    setCurrentRecordAndPlay(record) {
+        let rec = this.get('currentRecord')
+        if (rec) 
+            rec.updateIsPlaying(null);
+
+        this.setIsPlaying(true, true);
+        this.set('currentRecord', record);
+
+        mcat.global.Concertmaster.play(record);
+        record.updateIsPlaying(true);
+
+        this.updateTabState({ 'currentTrackPath': record.get('fullPath') });
+    },
+
+
+    updateTabState(obj) {
+        // tabState is defined in Application.js > loadNewTab()
+        const state = this.get('tabState');
+        for (let [key, value] of Object.entries(obj)) {
+            state.set(key, value);
+        }
+        state.save();
     }
+
 });
