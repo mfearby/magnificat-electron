@@ -13,62 +13,56 @@ Ext.define('mcat.global.State', {
     ///////////////////////////////////////////////////////////////////////////////////////////
 
     constructor: function () {
-        // Customise the model in order to set the seed value
-        let mdl = Ext.define('mcat.model.TabStateItem2', {
-            extend: 'mcat.model.TabStateItem',
-            identifier: {
-                type: 'sequential',
-                seed: 1000
-            }
-        });
-
         const store = Ext.create('Ext.data.Store', {
-            model: mdl //'mcat.model.TabStateItem'
+            model: 'mcat.model.TabStateItem',
+            autoSync: true
         });
-        this.tabs = store;
         store.load();
-        // Add the initial tab if this is the first time Magnificat starts
-        if (store.count() === 0) {
-            store.add({
+        this.tabs = store;
+    },
+
+    
+    getOrAddNewTabState(options) {
+        let store = this.tabs;
+
+        let obj = store.getById(options.id);
+        if (obj) { 
+            return obj;
+        }
+
+        var model = Ext.create('mcat.model.TabStateItem', options);
+        let records = store.add(model);
+        return records[0];
+    },
+
+
+    getAllTabs() {
+        let store = this.tabs;
+
+        if (store.count() == 0) {
+            this.getOrAddNewTabState({
                 title: 'Music',
                 rootDir: mcat.global.Config.musicDir,
                 selectedDir: mcat.global.Config.musicDir
             });
-            store.sync({
-                failure: function(batch, options) {
-                    mcat.global.Util.messageBox('Failed to add default Music tab to local storage', 'Critical Error', 'e');
-                }
-            });
         }
-    },
 
-    
-    // getTab(index, defaults) {
-    //     var tab = this.tabs.getById(index);
-    //     if (tab === null) {
-    //         tab = Ext.create('mcat.model.TabStateItem', defaults);
-    //     }
-    //     return tab;
-    // },
-
-
-    getAllTabs() {
-        return this.tabs.getData();
+        return store.getData();
     },
 
 
-    setActiveTab(id) {
+    getValue(key) {
         var storage = Ext.util.LocalStorage.get('mcat');
-        storage.setItem('activeTab', id);
+        const id = storage.getItem(key);
         storage.release();
+        return id;
     },
 
 
-    getActiveTab() {
+    setValue(key, value) {
         var storage = Ext.util.LocalStorage.get('mcat');
-        const id = storage.getItem('activeTab');
+        storage.setItem(key, value);
         storage.release();
-        return id || 0;
     }
 
 });

@@ -19,10 +19,6 @@ Ext.define('mcat.view.simple.SimpleViewModel', {
     },
 
     formulas: {
-        TreeRootName: function(get) {
-            const bits = get('rootDir').split(get('pathSep'));
-            return bits[bits.length - 1];
-        },
         selectedDirEncoded: function(get) {
             return encodeURIComponent(get('selectedDir'));
         },
@@ -30,6 +26,10 @@ Ext.define('mcat.view.simple.SimpleViewModel', {
             if (!get('isControllingPlayer')) return '';
             if (get('isPlaying') === null) return '';
             return get('isPlaying') ? 'x-fa fa-volume-up' : 'x-fa fa-volume-off';
+        },
+        treeRootName: function(get) {
+            const bits = get('rootDir').split(get('pathSep'));
+            return bits[bits.length - 1];
         },
         treeWidth: function(get) {
             const state = get('tabState');
@@ -44,7 +44,7 @@ Ext.define('mcat.view.simple.SimpleViewModel', {
             autoLoad: true,
             defaultRootId: '{rootDir}',
             root: {
-                name: '{TreeRootName}',
+                name: '{treeRootName}',
                 fullPath: '{rootDir}',
                 expanded: false
             },
@@ -166,6 +166,7 @@ Ext.define('mcat.view.simple.SimpleViewModel', {
         // tabState is defined in Application.js > loadNewTab()
         const state = this.get('tabState');
         for (let [key, value] of Object.entries(obj)) {
+            // console.log('  state.set("' + key + '", "' + value + '")');
             state.set(key, value);
         }
         state.save();

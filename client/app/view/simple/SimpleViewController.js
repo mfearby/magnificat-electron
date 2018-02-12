@@ -11,11 +11,9 @@ Ext.define('mcat.view.simple.SimpleViewController', {
 
     
     onPanelActivate: function(panel) {
-        // TO DO: this doesn't seem to be setting the new id for a newly-added tab
-        //        probably because the sequential integer ID on the model starts at 1 each app load
         const tabState = this.getViewModel().get('tabState');
         const id = tabState.get('id');
-        mcat.global.State.setActiveTab(id);
+        mcat.global.State.setValue('activeTab', id);
     },
 
 
@@ -30,43 +28,58 @@ Ext.define('mcat.view.simple.SimpleViewController', {
     },
 
 
-    ///////////////////////
-    // GRID PANEL EVENTS //
-    ///////////////////////
-
-    onGridItemDblClick: function(grid, record, item, index, e, eOpts) {
+    play: function(record) {
         mcat.getApplication().updateControllingTab(this.getView());
         this.getViewModel().setCurrentRecordAndPlay(record);
     },
 
 
+    ///////////////////////
+    // GRID PANEL EVENTS //
+    ///////////////////////
+
+    onGridItemDblClick: function(grid, record, item, index, e, eOpts) {
+        this.play(record);
+    },
+
+
     onFilesStoreLoad: function(store, records, success, operation, eOpts) {
-        const vm = this.getViewModel();
-        
-        if (!vm.get('isControllingPlayer'))
-            return;
+        const vc = this;
+        const vm = vc.getViewModel();
+        const appInit = vm.get('appInit');
 
+        console.log('appInit: ' + appInit);
 
-        // TO DO: use currentTrackPath to select record for new tabs
-
+        // const controllingPlayer = vm.get('isControllingPlayer');
+        // if (!vm.get('isControllingPlayer'))
+        //     return;
 
         const currentRecord = vm.get('currentRecord');
-        if (!currentRecord) 
-            return;
-
         const isPlaying = vm.get('isPlaying');
-        const fullPath = currentRecord.get('fullPath');
+        const sm = vc.lookup('simpleGrid').getSelectionModel();
+        const fullPath = currentRecord ? currentRecord.get('fullPath') : vm.get('currentTrackPath');
 
         // Reset the isPlaying property again
         Ext.each(records, function(rec, index) {
             if (rec.get('fullPath') === fullPath) {
-                // console.log('isPlaying ' + isPlaying + ' for ' + rec.get('name'));
-                rec.updateIsPlaying(isPlaying);
-                // Set this again in case the user browsed elsewhere then back again or refreshed the
-                // list, which means that the currentRecord is no longer the same object as this one.
-                vm.set('currentRecord', rec);
+                
+                sm.select([rec]);
+
+                // TO DO: change this to set the current song/progress on startup but paused
+                //        if the user doesn't want it to auto-play the last song on startup.
+                if (appInit) {
+                    vc.play(rec);
+
+                } else {
+                    rec.updateIsPlaying(isPlaying);
+                    // Set this again in case the user browsed elsewhere then back again or refreshed the
+                    // list, which means that the currentRecord is no longer the same object as this one.
+                    vm.set('currentRecord', rec);
+                }
             }
         });
+
+        vm.set('appInit', false);
     },
 
 

@@ -23,19 +23,15 @@ Ext.define('mcat.Application', {
         // FYI: Viewport is loaded via the 'mainView' property in ../app.js
     },
 
-    loadNewTab: function(options) {
-        let data = {}
+
+    loadNewTab: function(options, appInit = false) {
+        let data = {
+            appInit: appInit // if true, the controllingTab can take over the player again
+        }
         Ext.apply(data, options);
 
-        let state = {
-            type: 'mcat.model.TabStateItem'
-        };
-
-        // Link to the existing record if it's in local storage, otherwise create a new one
-        if (options.id !== undefined)
-            state.id = options.id;
-        else 
-            state.create = options;
+        // Make sure a TabStateItem exists before the tab is created 
+        let obj = mcat.global.State.getOrAddNewTabState(options);
 
         const tabs = Ext.getCmp('MainTabs');
         const tab = Ext.createByAlias('widget.simple', {
@@ -43,7 +39,10 @@ Ext.define('mcat.Application', {
             viewModel: {
                 data: data,
                 links: {
-                    tabState: state
+                    tabState: {
+                        type: 'mcat.model.TabStateItem',
+                        id: obj.get('id')
+                    }
                 }
             },
             listeners: {
@@ -67,6 +66,10 @@ Ext.define('mcat.Application', {
     updateControllingTab(tab) {
         this.controllingTab = tab;
         const tabs = Ext.getCmp('MainTabs');
+        const id = tab.getViewModel().get('tabState').get('id');
+
+        mcat.global.State.setValue('controllingTab', id);
+
         // Loop through all tabs and tell all but the playing tab to not show the playing icon
         tabs.items.each(function (panel) {
             if (tab !== panel) {
