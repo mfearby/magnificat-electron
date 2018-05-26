@@ -1,40 +1,19 @@
 # Magnificat
 
-Magnificat will become a magnificent cataloguing app for classical music enthusiasts with large CD collections to organise. Here's what it looks like so far:
+Magnificat was intended to become a fully featured cataloguing app for classical music enthusiasts with large CD collections to organise. I was going to write it in Electron using Ext JS but have since decided to use Java FX instead. This repository is being retained for the sake of curiosity. Here's what it looks like:
 
 ![Screenshot of version 0.1 so far](screenshot.png)
 
-There are no binaries to download yet (so this means you've also got to be a programming enthusiast to check it out, for now).
-
-## Project Roadmap
-
-This project is only a hobby so the following milestones may take some time to achieve.
+There are no binaries to download (you need to be a programming enthusiast to check it out and use it).
 
 ### Version 0.1
+- This is the first and last release of the Electron/Ext-JS version of the app (a Java FX version will be available in the coming months).
 - Use Electron and Ext JS to create an interface allowing users to open multiple tabs.
 - Allow users to browse/play music on the filesystem.
-- Remember play count and last date for each track by saving information to a file in the current directory (optional).
- 
-### Version 0.2
-- Allow users to browse/play music by genre, composer, album, etc (like the column browser in iTunes; requires a database which will be updated periodically).
-- Editing of tag information (including obtaining of details from file names based on user-entered format).
-
-### Version 0.3
-- Ripping CDs to MP3, OGG, and FLAC.
-- Use CDDB et al for default tags.
-
-### Version 0.4
-- Mini player support (with single-click buttons to switch between both views).
-
-### Version 0.5
-- Rip CDs to FLAC and transfer existing file names and tag information from user-selected lossless equivalents on disc.
-
-### Version 0.6
-- Allow users to rename files based on tag information.
 
 ## Pre-requisites
 
-There are no binaries uploaded to this repository (yet), so you will need the following in order to compile and run the source (in addition to being a developer of some kind who isn't afraid to compile something!):
+There are no binaries uploaded to this repository, so you will need the following in order to compile and run the source (in addition to being a developer of some kind who isn't afraid to compile something!):
 
 - Sencha Ext JS 6.2.0 [GPL v3 version](https://www.sencha.com/legal/GPL/)
 - [Sencha Cmd](https://www.sencha.com/products/sencha-cmd/) 6.5.1+ build tool
